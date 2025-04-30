@@ -4,21 +4,25 @@
         <TargetFramework>net48</TargetFramework>
         <LangVersion>12.0</LangVersion>
         <Nullable>disable</Nullable>
-        <RootNamespace>SLPluginTest</RootNamespace>
+        <RootNamespace>RespawnTokenOverhaul</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Assembly-CSharp">
-          <HintPath>..\Assembly-CSharp.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="Assembly-CSharp-firstpass">
-          <HintPath>..\Assembly-CSharp-firstpass.dll</HintPath>
-        </Reference>
-        <Reference Include="LabAPI">
-            <HintPath>..\LabAPI.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>..\Binaries\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>..\Binaries\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="LabApi">
+        <HintPath>..\Binaries\LabApi.dll</HintPath>
+      </Reference>
+      <Reference Include="Mirror">
+        <HintPath>..\Binaries\Mirror.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\Binaries\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
