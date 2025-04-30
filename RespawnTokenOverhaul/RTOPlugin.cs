@@ -13,7 +13,7 @@ namespace RespawnTokenOverhaul;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 // ReSharper disable once InconsistentNaming
-public class RSTPlugin : Plugin<CustomConfig>
+public class RTOPlugin : Plugin<CustomConfig>
 {
     // The name of the plugin
     public override string Name { get; } = "RespawnTokenOverhaul";
@@ -35,8 +35,8 @@ public class RSTPlugin : Plugin<CustomConfig>
 
     
     public new CustomConfig Config => base.Config!;
-    private CustomEventModifications Events { get; } = new();
-    public static RSTPlugin Instance { get; private set; }
+    private CustomEvents Events { get; } = new();
+    public static RTOPlugin Instance { get; private set; }
     
     // Entry point override
     public override void Enable()
@@ -67,6 +67,11 @@ public class RSTPlugin : Plugin<CustomConfig>
     }
     
     private static List<int> DefaultWaveMilestoneList { get; } = [30, 80, 150, 200];
+    /// <summary>
+    /// Modifies the Milestones for the passed Faction, replacing them with passed milestone targets instead.
+    /// </summary>
+    /// <param name="faction">The faction to modify</param>
+    /// <param name="milestones">The milestones to set to.</param>
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private void SetWaveMilestones(Faction faction, List<int> milestones)
     {

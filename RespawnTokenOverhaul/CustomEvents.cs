@@ -9,8 +9,11 @@ using Respawning.Waves.Generic;
 
 namespace RespawnTokenOverhaul;
 
-public class CustomEventModifications : CustomEventsHandler
+public class CustomEvents : CustomEventsHandler
 {
+    /// <summary>
+    /// Overrides basic behaviour to set spawning tokens to default value.
+    /// </summary>
     public override void OnServerWaitingForPlayers()   // OnServerRoundStart()
     {
         int setTokens = 0;
@@ -33,11 +36,15 @@ public class CustomEventModifications : CustomEventsHandler
         RespawnTokensManager.AvailableRespawnsLeft = setTokens;
     }
 
+    /// <summary>
+    /// If enabled, checks for any remaining spawning token options; if none remain, throws out a CASSIE notification.
+    /// </summary>
+    /// <param name="ev">Default passed parameter.</param>
     public override void OnServerWaveRespawned(WaveRespawnedEventArgs ev)
     {
         base.OnServerWaveRespawned(ev);
 
-        if (!RSTPlugin.Instance.Config.NoMoreRespawnsNotification) return;
+        if (!RTOPlugin.Instance.Config.NoMoreRespawnsNotification) return;
         
         // We check if there are any factions with unachieved milestones, return.
         if (RespawnTokensManager.Milestones.Values.Any(milestones => milestones.Any(milestone => !milestone.Achieved)))
