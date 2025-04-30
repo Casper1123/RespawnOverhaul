@@ -26,6 +26,7 @@ public class CustomConfig
     [Description("The tickets required per respawn token for each *vanilla* team (does not alter custom plugin ones). Default: [30, 80, 150, 200]")]
     public List<int> NtfMilestones { get; set; } = [30, 80, 150, 200];
     public List<int> ChaosMilestones { get; set; } = [30, 80, 150, 200];
+    // Todo: Display the next milestone as a Hint on the screen.
     #endregion
     
     /// <summary>
@@ -37,15 +38,19 @@ public class CustomConfig
     {
         return faction switch
         {
-            Faction.FoundationStaff => RSTPlugin.Instance.Config.NtfStartingRespawnTokens,
-            Faction.FoundationEnemy => RSTPlugin.Instance.Config.ChaosStartingRespawnTokens,
-            Faction.Unclassified => RSTPlugin.Instance.Config.TutorialStartingRespawnTokens,
-            Faction.SCP => RSTPlugin.Instance.Config.SCPStartingRespawnTokens,
-            Faction.Flamingos => RSTPlugin.Instance.Config.FlamingoStartingRespawnTokens,
+            Faction.FoundationStaff => RTOPlugin.Instance.Config.NtfStartingRespawnTokens,
+            Faction.FoundationEnemy => RTOPlugin.Instance.Config.ChaosStartingRespawnTokens,
+            Faction.Unclassified => RTOPlugin.Instance.Config.TutorialStartingRespawnTokens,
+            Faction.SCP => RTOPlugin.Instance.Config.SCPStartingRespawnTokens,
+            Faction.Flamingos => RTOPlugin.Instance.Config.FlamingoStartingRespawnTokens,
             _ => -1
         };
     }
 
+    /// <summary>
+    /// Checks if the loaded configuration is valid (no spawn tokens below 0).
+    /// </summary>
+    /// <returns>Configuration validity.</returns>
     public bool ValidConfiguration()
     {
         return ChaosStartingRespawnTokens >= 0 && NtfStartingRespawnTokens >= 0 && TutorialStartingRespawnTokens >= 0 && SCPStartingRespawnTokens >= 0 && FlamingoStartingRespawnTokens >= 0;
