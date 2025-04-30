@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using LabApi.Events.CustomHandlers;
+using LabApi.Features;
+using LabApi.Features.Console;
+using LabApi.Loader.Features.Plugins;
+using PlayerRoles;
+using Respawning;
+
+
+namespace RespawnTokenOverhaul;
+
+// ReSharper disable once ClassNeverInstantiated.Global
+// ReSharper disable once InconsistentNaming
+public class RSTPlugin : Plugin<CustomConfig>
+{
+    // The name of the plugin
+    public override string Name { get; } = "RespawnTokenOverhaul";
+
+    // The description of the plugin
+    public override string Description { get; } = "Configurably changes team spawn token behaviour.";
+
+    // The author of the plugin
+    public override string Author { get; } = "Casper1123";
+
+    // The current version of the plugin
+    public override Version Version { get; } = new(0, 0, 0, 0);
+
+    // Config file path
+    public override string ConfigFileName { get; set; } = "config.yml";
+
+    // The required version of LabAPI (usually the version the plugin was built with)
+    public override Version RequiredApiVersion { get; } = new (LabApiProperties.CompiledVersion);
+
+    
+    public new CustomConfig Config => base.Config!;
+    private CustomEventModifications Events { get; } = new();
+    public static RSTPlugin Instance { get; private set; }
+    
+    // Entry point override
+    public override void Enable()
+    {
+        if (!Config.ValidConfiguration())
+        {
+            Logger.Error("Configuration is invalid. Please see required input value ranges in config.yaml");
+            return;
+        }
+        Instance = this;
+        
+        Logger.Info("Attaching custom events handler.");
+        CustomHandlersManager.RegisterEventsHandler(Events);
+        
+        Logger.Info("Modifying vanilla spawn milestones.");
+        SetWaveMilestones(Faction.FoundationStaff, Config.NtfMilestones);
+        SetWaveMilestones(Faction.FoundationEnemy, Config.ChaosMilestones);
+    }
+
+    // Exit point override
+    public override void Disable()
+    {
+        Logger.Info("Detaching custom events handler.");
+        CustomHandlersManager.UnregisterEventsHandler(Events);
+        Logger.Info("Resetting vanilla spawn milestones.");
+        SetWaveMilestones(Faction.FoundationStaff, DefaultWaveMilestoneList);
+        SetWaveMilestones(Faction.FoundationEnemy, DefaultWaveMilestoneList);
+    }
+    
+    private static List<int> DefaultWaveMilestoneList { get; } = [30, 80, 150, 200];
+    // ReSharper disable once MemberCanBeMadeStatic.Local
+    private void SetWaveMilestones(Faction faction, List<int> milestones)
+    {
+        // Get list of milestones, clear it and add our own.
+        List<RespawnTokensManager.Milestone> currentMilestones;
+        try
+        {
+            currentMilestones = RespawnTokensManager.Milestones[faction];
+        }
+        catch (Exception){ return; }  
+        // Empty catch clause is fine because let's be real here, if we can't do a faction fetch from this there's no entry to alter and...
+        //              I can't be asked to make one.
+        // If it's not a vanilla entry then it might not be in there, at which point the original author is allowed to modify this themselves.
+        // Vanilla should always be present.
+
+        currentMilestones.Clear();
+        currentMilestones.AddRange(milestones.Select(milestone => new RespawnTokensManager.Milestone(milestone)));
+    }
+}

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>12.0</LangVersion>
+        <Nullable>disable</Nullable>
+        <RootNamespace>SLPluginTest</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+          <HintPath>..\Assembly-CSharp.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+          <HintPath>..\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="LabAPI">
+            <HintPath>..\LabAPI.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+</Project>
+
