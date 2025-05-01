@@ -11,12 +11,12 @@ public class CustomConfig
     public int NtfStartingRespawnTokens { get; set; } = 2;
     [Description("The starting amount of spawn waves for the Chaos Insurgency unit. Backup waves not included. Values >= 0")]
     public int ChaosStartingRespawnTokens { get; set; } = 2;
-    [Description("The starting amount of spawn waves for the Tutorial team. Backup waves not included.\nThis is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
+    [Description("The starting amount of spawn waves for the Tutorial team. Backup waves not included.\n# This is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
     public int TutorialStartingRespawnTokens { get; set; } = 2;
-    [Description("The starting amount of spawn waves for the SCP team. Backup waves not included.\nThis is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
+    [Description("The starting amount of spawn waves for the SCP team. Backup waves not included.\n# This is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
     // ReSharper disable once InconsistentNaming
     public int SCPStartingRespawnTokens { get; set; } = 2;
-    [Description("The starting amount of spawn waves for the Flamingo team. Backup waves not included.\nThis is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
+    [Description("The starting amount of spawn waves for the Flamingo team. Backup waves not included.\n# This is here to be compatible with plugins, as they cannot spawn naturally. Values >= 0")]
     public int FlamingoStartingRespawnTokens { get; set; } = 2;
     #endregion
     
