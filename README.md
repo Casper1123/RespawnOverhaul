@@ -26,6 +26,6 @@ When enabled, allows C.A.S.S.I.E. to broadcast an announcement once all Tokens a
 ### NtfMilestones & ChaosMilestones
 Both of these are a list of numbers, the amount of numbers input being the amount of milestones (so 4 numbers means 4 milestones to be achievable). The actual number input is the milestone threshold that needs to be cleared for the token to be given to the corresponding team. The ticket system is a little complicated, so I won't go over it right now; it just happens in the background and the speed of obtaining tickets can be edited in the `gameplay_config` file of the server.
 Defaults to `[30, 80, 150, 200]` giving 4 milestones with their corresponding ticket count each.
-Can be left to disable the system for these teams entirely.
+Each milestone value should be `>=0` to be added, and to disable the milestone system just input `-1`.
 
 **Important:** these milestones are only reflected server side, and the ticket requirement on the UI won't update. Whilst not implemented, a workaround for this is being thought about, so be patient (or contribute!).
