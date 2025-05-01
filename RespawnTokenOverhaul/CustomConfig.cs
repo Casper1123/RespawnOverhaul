@@ -27,6 +27,7 @@ public class CustomConfig
     public List<int> NtfMilestones { get; set; } = [30, 80, 150, 200];
     public List<int> ChaosMilestones { get; set; } = [30, 80, 150, 200];
     // Todo: Display the next milestone as a Hint on the screen.
+    public bool EnableDebugLogging { get; set; } = false;
     #endregion
     
     /// <summary>

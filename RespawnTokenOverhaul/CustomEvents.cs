@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features.Wrappers;
@@ -6,6 +7,7 @@ using MEC;
 using Respawning;
 using Respawning.Waves;
 using Respawning.Waves.Generic;
+using Logger = LabApi.Features.Console.Logger;
 
 namespace RespawnTokenOverhaul;
 
@@ -44,16 +46,48 @@ public class CustomEvents : CustomEventsHandler
     {
         base.OnServerWaveRespawned(ev);
 
+        Timing.CallDelayed(3f, CheckForRemainingRespawns);
+    }
+
+    // ReSharper disable once MemberCanBeMadeStatic.Local
+    private void CheckForRemainingRespawns()
+    {
+        Logger.Debug("Checking respawn parameters.", RTOPlugin.Instance.Config.EnableDebugLogging);
         if (!RTOPlugin.Instance.Config.NoMoreRespawnsNotification) return;
         
+        Logger.Debug("Checking Milestones", RTOPlugin.Instance.Config.EnableDebugLogging);
         // We check if there are any factions with unachieved milestones, return.
         if (RespawnTokensManager.Milestones.Values.Any(milestones => milestones.Any(milestone => !milestone.Achieved)))
+        {
+            foreach (List<RespawnTokensManager.Milestone> milestones in RespawnTokensManager.Milestones.Values)
+            {
+                foreach (RespawnTokensManager.Milestone milestone in milestones)
+                {
+                    Logger.Debug($"\t{milestone.Threshold} | {milestone.Achieved}", RTOPlugin.Instance.Config.EnableDebugLogging);
+                }
+            }
+
             return;
-        
+        }
+            
+        Logger.Debug("Checking Tokens", RTOPlugin.Instance.Config.EnableDebugLogging);
         // If there are any respawn tokens left.
         if (WaveManager.Waves.Select(spawnableWaveBase => spawnableWaveBase as ILimitedWave)
-            .Where(limitedWave => limitedWave is not null).Any(limitedWave => limitedWave.RespawnTokens > 0)) return;
+            .Where(limitedWave => limitedWave is not null).Any(limitedWave => limitedWave.RespawnTokens > 0))
+        {
+            foreach (SpawnableWaveBase spawnableWaveBase in WaveManager.Waves)
+            {
+                if (spawnableWaveBase is not ILimitedWave limitedWave) continue;
+                if (limitedWave.RespawnTokens <= 0) continue;
+                RespawnWave wave = RespawnWaves.Get(spawnableWaveBase);
+                if (wave is null) continue;
+                
+                Logger.Debug($"\t{limitedWave.RespawnTokens} | {spawnableWaveBase.GetType()} | {wave.RespawnTokens} | {wave.GetType()}", RTOPlugin.Instance.Config.EnableDebugLogging);
+            }
+            return;
+        }
 
+        Logger.Debug("Attempting to play announcement");
         // No tokens, no milestones. Wait a certain amount of time, and make CASSIE report.
         RespawnEffectsController.PlayCassieAnnouncement("SURVIVE . FOR THERE IS ONLY YOU LEFT", true, false, true);
     }
