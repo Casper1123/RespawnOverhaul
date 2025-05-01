@@ -23,7 +23,7 @@ public class CustomConfig
     #region General
     [Description("Makes C.A.S.S.I.E. announce when all possibly achievable respawn tokens have been expended. This happens before the Dead Man's Sequence occurs.")]
     public bool NoMoreRespawnsNotification { get; set; } = true;
-    [Description("The tickets required per respawn token for each *vanilla* team (does not alter custom plugin ones). Default: [30, 80, 150, 200]")]
+    [Description("The tickets required per respawn token for each *vanilla* team (does not alter custom plugin ones). Default: [30, 80, 150, 200].\n# put in -1 to disable for this team.")]
     public List<int> NtfMilestones { get; set; } = [30, 80, 150, 200];
     public List<int> ChaosMilestones { get; set; } = [30, 80, 150, 200];
     // Todo: Display the next milestone as a Hint on the screen.

@@ -88,6 +88,6 @@ public class RTOPlugin : Plugin<CustomConfig>
         // Vanilla should always be present.
 
         currentMilestones.Clear();
-        currentMilestones.AddRange(milestones.Select(milestone => new RespawnTokensManager.Milestone(milestone)));
+        currentMilestones.AddRange(from milestone in milestones where milestone >= 0 select new RespawnTokensManager.Milestone(milestone));
     }
 }
