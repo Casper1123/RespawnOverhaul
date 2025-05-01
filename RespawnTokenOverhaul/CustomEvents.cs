@@ -59,6 +59,8 @@ public class CustomEvents : CustomEventsHandler
         // We check if there are any factions with unachieved milestones, return.
         if (RespawnTokensManager.Milestones.Values.Any(milestones => milestones.Any(milestone => !milestone.Achieved)))
         {
+            if (!RTOPlugin.Instance.Config.EnableDebugLogging) return;
+            
             foreach (List<RespawnTokensManager.Milestone> milestones in RespawnTokensManager.Milestones.Values)
             {
                 foreach (RespawnTokensManager.Milestone milestone in milestones)
@@ -75,6 +77,8 @@ public class CustomEvents : CustomEventsHandler
         if (WaveManager.Waves.Select(spawnableWaveBase => spawnableWaveBase as ILimitedWave)
             .Where(limitedWave => limitedWave is not null).Any(limitedWave => limitedWave.RespawnTokens > 0))
         {
+            if (!RTOPlugin.Instance.Config.EnableDebugLogging) return;
+            
             foreach (SpawnableWaveBase spawnableWaveBase in WaveManager.Waves)
             {
                 if (spawnableWaveBase is not ILimitedWave limitedWave) continue;
@@ -87,8 +91,12 @@ public class CustomEvents : CustomEventsHandler
             return;
         }
 
-        Logger.Debug("Attempting to play announcement");
+        Logger.Debug("Attempting to play announcement", RTOPlugin.Instance.Config.EnableDebugLogging);
         // No tokens, no milestones. Wait a certain amount of time, and make CASSIE report.
         RespawnEffectsController.PlayCassieAnnouncement("SURVIVE . FOR THERE IS ONLY YOU LEFT", true, false, true);
+        // SURVIVE . FOR THERE IS ONLY YOU LEFT
+        // SURVIVE . FOR NO MORE BACKUP IS LEFT
+        // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL PERSONNEL BACKUP RESTRICTED
+        // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED
     }
 }
