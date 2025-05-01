@@ -53,6 +53,6 @@ public class CustomConfig
     /// <returns>Configuration validity.</returns>
     public bool ValidConfiguration()
     {
-        return ChaosStartingRespawnTokens >= 0 && NtfStartingRespawnTokens >= 0 && TutorialStartingRespawnTokens >= 0 && SCPStartingRespawnTokens >= 0 && FlamingoStartingRespawnTokens >= 0;
+        return ChaosStartingRespawnTokens >= -1 && NtfStartingRespawnTokens >= -1 && TutorialStartingRespawnTokens >= -1 && SCPStartingRespawnTokens >= -1 && FlamingoStartingRespawnTokens >= -1;
     }
 }

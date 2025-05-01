@@ -13,7 +13,7 @@ The number displayed on either outside is the remaining number of Respawn Tokens
 ### Starting Respawn Tokens
 The starting respawn tokens can be configured for each Faction. This **does** modify the token values for non-mini wave plugin spawnwaves, so keep that in mind (and is thus compatible with Serpents Hand plugins).
 If one of these plugin waves do not exist, their configuration doesn't matter.
-***All default token values must be `>= 0`.***
+***All default token values must be `>= -1`. The value `-1` disables the overriding, whilst any other value higher will override the teams of that faction to that token value.***
 Each listed faction in the Config aligns to the team they win with, and most are there for compatibility reasons. Defaults to `2`.
 The change in tokens will be reflected visually, like below.
 ![changed-tokens](./readme-files/changed-tokens.png)
