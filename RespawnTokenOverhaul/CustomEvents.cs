@@ -37,18 +37,19 @@ public class CustomEvents : CustomEventsHandler
         // Set the amount of respawns left to the total amount of tokens distributed. May not be required
         RespawnTokensManager.AvailableRespawnsLeft = setTokens;
     }
-
-    /// <summary>
-    /// If enabled, checks for any remaining spawning token options; if none remain, throws out a CASSIE notification.
-    /// </summary>
-    /// <param name="ev">Default passed parameter.</param>
+    
     public override void OnServerWaveRespawned(WaveRespawnedEventArgs ev)
     {
         base.OnServerWaveRespawned(ev);
 
+        // Call delayed to let background things update.
         Timing.CallDelayed(3f, CheckForRemainingRespawns);
     }
 
+    /// <summary>
+    /// Checks for remaining respawn tokens and achievable milestones if NoMoreRespawnsNotification = true.
+    /// If there aren't any, then CASSIE states so in a broadcast.
+    /// </summary>
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private void CheckForRemainingRespawns()
     {
