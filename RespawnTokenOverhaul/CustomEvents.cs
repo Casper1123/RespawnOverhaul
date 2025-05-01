@@ -93,7 +93,7 @@ public class CustomEvents : CustomEventsHandler
 
         Logger.Debug("Attempting to play announcement", RTOPlugin.Instance.Config.EnableDebugLogging);
         // No tokens, no milestones. Wait a certain amount of time, and make CASSIE report.
-        RespawnEffectsController.PlayCassieAnnouncement("SURVIVE . FOR THERE IS ONLY YOU LEFT", true, false, true);
+        RespawnEffectsController.PlayCassieAnnouncement("SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED", true, false, true);
         // SURVIVE . FOR THERE IS ONLY YOU LEFT
         // SURVIVE . FOR NO MORE BACKUP IS LEFT
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL PERSONNEL BACKUP RESTRICTED
