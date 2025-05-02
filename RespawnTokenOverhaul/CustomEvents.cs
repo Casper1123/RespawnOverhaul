@@ -115,7 +115,7 @@ public class CustomEvents : CustomEventsHandler
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED
     }
 
-    public void old_OnServerWaveRespawning(WaveRespawningEventArgs ev)  // Here to keep the code around for now, used to be in the spot of OnServerWaveTeamSelecting.
+    public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)  // Here to keep the code around for now, used to be in the spot of OnServerWaveTeamSelecting.
     {
         if (ev.Wave is MiniRespawnWave) return;
         
