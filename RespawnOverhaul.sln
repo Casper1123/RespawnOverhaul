@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RespawnTokenOverhaul", "RespawnTokenOverhaul\RespawnTokenOverhaul.csproj", "{0911B0FA-89A2-4BCE-AAB2-FB3ABD7F2BEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RespawnOverhaul", "RespawnOverhaul\RespawnOverhaul.csproj", "{0911B0FA-89A2-4BCE-AAB2-FB3ABD7F2BEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

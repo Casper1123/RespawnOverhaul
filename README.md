@@ -1,6 +1,6 @@
-# RespawnTokenOverhaul
-This is a plugin that aims to give more control about Respawn tokens and the Ticket system to server owners.
-This runs on LabAPI and as such requires versions starting from 14.0.
+# RespawnOverhaul
+This is a plugin that aims to give more control about Respawn tokens, Ticket system and more respawning attributes to server owners.
+This runs on LabAPI and as such requires versions starting from 14.1.
 
 # Configuration
 When on the spectator screen, you'll see a bar for each team on the top, with a number besides each vanilla team icon.
@@ -29,3 +29,9 @@ Defaults to `[30, 80, 150, 200]` giving 4 milestones with their corresponding ti
 Each milestone value should be `>=0` to be added, and to disable the milestone system just input `-1`.
 
 **Important:** these milestones are only reflected server side, and the ticket requirement on the UI won't update. Whilst not implemented, a workaround for this is being thought about, so be patient (or contribute!).
+
+### MinimumWaveSizePercentage
+Determines the minimum % of server players that have to be dead for a wave to spawn. Takes values from 0 to 100, where 100 will stop waves from spawning (because in regular games the game will stop once 100% of the players are dead). <BR>
+Additionally sets the maximum wave limit to as many players as possible. <BR>
+Setting the value to `-1` keeps the minimum spawning requirement and the maximum wave size the vanilla values.
+

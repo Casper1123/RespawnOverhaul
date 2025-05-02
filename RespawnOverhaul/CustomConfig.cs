@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using PlayerRoles;
 
-namespace RespawnTokenOverhaul;
+namespace RespawnOverhaul;
 
 public class CustomConfig
 {
@@ -42,11 +42,11 @@ public class CustomConfig
     {
         return faction switch
         {
-            Faction.FoundationStaff => RTOPlugin.Instance.Config.NtfStartingRespawnTokens,
-            Faction.FoundationEnemy => RTOPlugin.Instance.Config.ChaosStartingRespawnTokens,
-            Faction.Unclassified => RTOPlugin.Instance.Config.TutorialStartingRespawnTokens,
-            Faction.SCP => RTOPlugin.Instance.Config.SCPStartingRespawnTokens,
-            Faction.Flamingos => RTOPlugin.Instance.Config.FlamingoStartingRespawnTokens,
+            Faction.FoundationStaff => ROPlugin.Instance.Config.NtfStartingRespawnTokens,
+            Faction.FoundationEnemy => ROPlugin.Instance.Config.ChaosStartingRespawnTokens,
+            Faction.Unclassified => ROPlugin.Instance.Config.TutorialStartingRespawnTokens,
+            Faction.SCP => ROPlugin.Instance.Config.SCPStartingRespawnTokens,
+            Faction.Flamingos => ROPlugin.Instance.Config.FlamingoStartingRespawnTokens,
             _ => -1
         };
     }

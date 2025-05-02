@@ -9,37 +9,37 @@ using PlayerRoles;
 using Respawning;
 
 
-namespace RespawnTokenOverhaul;
+namespace RespawnOverhaul;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 // ReSharper disable once InconsistentNaming
-public class RTOPlugin : Plugin<CustomConfig>
+public class ROPlugin : Plugin<CustomConfig>
 {
     // todo: protect certain things of the plugin.
-    
+
     // The name of the plugin
     public override string Name { get; } = "RespawnTokenOverhaul";
 
     // The description of the plugin
-    public override string Description { get; } = "Configurably changes team spawn token behaviour.";
+    public override string Description { get; } = "Configurably changes team respawn behaviour.";
 
     // The author of the plugin
     public override string Author { get; } = "Casper1123";
 
     // The current version of the plugin
-    public override Version Version { get; } = new(0, 0, 0, 0);
+    public override Version Version { get; } = new(1, 0, 0);
 
     // Config file path
     public override string ConfigFileName { get; set; } = "config.yml";
 
     // The required version of LabAPI (usually the version the plugin was built with)
-    public override Version RequiredApiVersion { get; } = new (LabApiProperties.CompiledVersion);
+    public override Version RequiredApiVersion { get; } = new(LabApiProperties.CompiledVersion);
 
-    
+
     public new CustomConfig Config => base.Config!;
     private CustomEvents Events { get; } = new();
-    public static RTOPlugin Instance { get; private set; }
-    
+    public static ROPlugin Instance { get; private set; }
+
     // Entry point override
     public override void Enable()
     {
@@ -48,11 +48,12 @@ public class RTOPlugin : Plugin<CustomConfig>
             Logger.Error("Configuration is invalid. Please see required input value ranges in config.yaml");
             return;
         }
+
         Instance = this;
-        
+
         Logger.Debug("Attaching custom events handler.", Instance.Config.EnableDebugLogging);
         CustomHandlersManager.RegisterEventsHandler(Events);
-        
+
         Logger.Debug("Modifying vanilla spawn milestones.", Instance.Config.EnableDebugLogging);
         SetWaveMilestones(Faction.FoundationStaff, Config.NtfMilestones);
         SetWaveMilestones(Faction.FoundationEnemy, Config.ChaosMilestones);
@@ -67,8 +68,9 @@ public class RTOPlugin : Plugin<CustomConfig>
         SetWaveMilestones(Faction.FoundationStaff, DefaultWaveMilestoneList);
         SetWaveMilestones(Faction.FoundationEnemy, DefaultWaveMilestoneList);
     }
-    
+
     private static List<int> DefaultWaveMilestoneList { get; } = [30, 80, 150, 200];
+
     /// <summary>
     /// Modifies the Milestones for the passed Faction, replacing them with passed milestone targets instead.
     /// </summary>
@@ -83,14 +85,18 @@ public class RTOPlugin : Plugin<CustomConfig>
         {
             currentMilestones = RespawnTokensManager.Milestones[faction];
         }
-        catch (Exception){ return; }  
+        catch (Exception)
+        {
+            return;
+        }
         // Empty catch clause is fine because let's be real here, if we can't do a faction fetch from this there's no entry to alter and...
         //              I can't be asked to make one.
         // If it's not a vanilla entry then it might not be in there, at which point the original author is allowed to modify this themselves.
         // Vanilla should always be present.
 
         currentMilestones.Clear();
-        currentMilestones.AddRange(from milestone in milestones where milestone >= 0 select new RespawnTokensManager.Milestone(milestone));
+        currentMilestones.AddRange(from milestone in milestones
+            where milestone >= 0
+            select new RespawnTokensManager.Milestone(milestone));
     }
-    
 }
