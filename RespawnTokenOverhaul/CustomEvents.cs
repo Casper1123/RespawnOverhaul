@@ -22,9 +22,12 @@ public class CustomEvents : CustomEventsHandler
         foreach (SpawnableWaveBase spawnableWaveBase in WaveManager.Waves)
         {
             RespawnWave wave = RespawnWaves.Get(spawnableWaveBase);
-            ILimitedWave limitedWave = spawnableWaveBase as ILimitedWave;
-            if (limitedWave is null || wave is null) continue;
+            if (spawnableWaveBase is not ILimitedWave limitedWave || wave is null) continue;
             if (wave is MiniRespawnWave) continue;
+            
+            // Overriding spawn wave max size to 100% of the spectators. Leave no-one behind.
+            // Done regardless of the set tokens in the config.
+            wave.MaxWaveSize = Player.List.Count > Server.MaxPlayers ? Player.List.Count : Server.MaxPlayers;
 
             int factionTokens = CustomConfig.GetFactionDefaultRespawnTokens(wave.Faction);
             if (factionTokens < 0) continue;
@@ -37,11 +40,19 @@ public class CustomEvents : CustomEventsHandler
         // Set the amount of respawns left to the total amount of tokens distributed. May not be required
         RespawnTokensManager.AvailableRespawnsLeft = setTokens;
     }
-    
+
+    public override void OnServerRoundStarting(RoundStartingEventArgs ev)
+    {
+        foreach (RespawnWave wave in from spawnableWaveBase in WaveManager.Waves let wave = RespawnWaves.Get(spawnableWaveBase) let limitedWave = spawnableWaveBase as ILimitedWave where limitedWave is not null && wave is not null where wave is not MiniRespawnWave select wave)
+        {
+            // Overriding spawn wave max size to 100% of the spectators. Leave no-one behind.
+            // Done regardless of the set tokens in the config.
+            wave.MaxWaveSize = Player.List.Count > Server.MaxPlayers ? Player.List.Count : Server.MaxPlayers;
+        }
+    }
+
     public override void OnServerWaveRespawned(WaveRespawnedEventArgs ev)
     {
-        base.OnServerWaveRespawned(ev);
-
         // Call delayed to let background things update.
         Timing.CallDelayed(3f, CheckForRemainingRespawns);
     }
@@ -100,4 +111,25 @@ public class CustomEvents : CustomEventsHandler
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL PERSONNEL BACKUP RESTRICTED
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED
     }
+
+    public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)
+    {
+        if (ev.Wave is MiniRespawnWave) return;
+        
+        if (RTOPlugin.Instance.Config.MinimumWaveSizePercentage != -1) return; // Is enabled.
+
+        if (ev.SpawningPlayers.Count() < RTOPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100)
+        {
+            Logger.Debug($"Permitting Respawn attempt because {ev.SpawningPlayers.Count()} >= {RTOPlugin.Instance.Config.MinimumWaveSizePercentage
+                * Player.List.Count / 100}.", RTOPlugin.Instance.Config.EnableDebugLogging);
+            return;
+        }
+        
+        ev.IsAllowed = false;
+        ev.Wave.RespawnTokens++;  // Give the token back.
+        Logger.Debug(
+            $"Tossing Respawn attempt because {ev.SpawningPlayers.Count()} < {RTOPlugin.Instance.Config.MinimumWaveSizePercentage
+                * Player.List.Count / 100}.", RTOPlugin.Instance.Config.EnableDebugLogging);
+    }
+    
 }

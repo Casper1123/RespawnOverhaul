@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LabApi.Events;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features;
 using LabApi.Features.Console;
@@ -90,4 +91,5 @@ public class RTOPlugin : Plugin<CustomConfig>
         currentMilestones.Clear();
         currentMilestones.AddRange(from milestone in milestones where milestone >= 0 select new RespawnTokensManager.Milestone(milestone));
     }
+    
 }
