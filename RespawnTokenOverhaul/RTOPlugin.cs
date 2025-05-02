@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LabApi.Events;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features;
 using LabApi.Features.Console;
@@ -51,10 +50,10 @@ public class RTOPlugin : Plugin<CustomConfig>
         }
         Instance = this;
         
-        Logger.Info("Attaching custom events handler.");
+        Logger.Debug("Attaching custom events handler.", Instance.Config.EnableDebugLogging);
         CustomHandlersManager.RegisterEventsHandler(Events);
         
-        Logger.Info("Modifying vanilla spawn milestones.");
+        Logger.Debug("Modifying vanilla spawn milestones.", Instance.Config.EnableDebugLogging);
         SetWaveMilestones(Faction.FoundationStaff, Config.NtfMilestones);
         SetWaveMilestones(Faction.FoundationEnemy, Config.ChaosMilestones);
     }
@@ -62,9 +61,9 @@ public class RTOPlugin : Plugin<CustomConfig>
     // Exit point override
     public override void Disable()
     {
-        Logger.Info("Detaching custom events handler.");
+        Logger.Debug("Detaching custom events handler.", Instance.Config.EnableDebugLogging);
         CustomHandlersManager.UnregisterEventsHandler(Events);
-        Logger.Info("Resetting vanilla spawn milestones.");
+        Logger.Debug("Resetting vanilla spawn milestones.", Instance.Config.EnableDebugLogging);
         SetWaveMilestones(Faction.FoundationStaff, DefaultWaveMilestoneList);
         SetWaveMilestones(Faction.FoundationEnemy, DefaultWaveMilestoneList);
     }

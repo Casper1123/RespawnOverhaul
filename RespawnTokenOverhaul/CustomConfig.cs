@@ -27,7 +27,7 @@ public class CustomConfig
     public List<int> NtfMilestones { get; set; } = [30, 80, 150, 200];
     public List<int> ChaosMilestones { get; set; } = [30, 80, 150, 200];
     // Todo: Display the next milestone as a Hint on the screen.
-    [Description("The percentage of the server population that must be included in the spawn. Can be -1 to disable this functionality.\n# Automatically sets max wave size to all spectators.\n# range 0.0 - 1.0, but 1.0 will prevent spawns.")]
+    [Description("The percentage of the server population that must be included in the spawn.\n# Automatically sets max wave size to all spectators.\n# range 0.0 - 1.0, but 1.0 will prevent spawns.\n# Can be -1 to disable this functionality.")]
     public int MinimumWaveSizePercentage { get; set; } = 60;
     [Description("Prints debug information to the server console.")]
     public bool EnableDebugLogging { get; set; } = false;
