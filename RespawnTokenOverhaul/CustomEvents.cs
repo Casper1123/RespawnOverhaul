@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features.Wrappers;
@@ -114,7 +115,7 @@ public class CustomEvents : CustomEventsHandler
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED
     }
 
-    public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)  // Here to keep the code around for now, used to be in the spot of OnServerWaveTeamSelecting.
+    public void old_OnServerWaveRespawning(WaveRespawningEventArgs ev)  // Here to keep the code around for now, used to be in the spot of OnServerWaveTeamSelecting.
     {
         if (ev.Wave is MiniRespawnWave) return;
         
@@ -122,7 +123,7 @@ public class CustomEvents : CustomEventsHandler
 
         int requiredUsers = RTOPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100;
         
-        if (ev.SpawningPlayers.Count() < requiredUsers)
+        if (ev.SpawningPlayers.Count() >= requiredUsers)
         {
             Logger.Debug($"Permitting Respawn attempt because {ev.SpawningPlayers.Count()} >= {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
             return;
@@ -133,49 +134,44 @@ public class CustomEvents : CustomEventsHandler
         Logger.Debug(
             $"Tossing Respawn attempt because {ev.SpawningPlayers.Count()} < {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
     }
-    
+
+    [CanBeNull] private RespawnWave _lockedWave;
     public override void OnServerWaveTeamSelecting(WaveTeamSelectingEventArgs ev)
     {
         if (RTOPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
+        
+        RespawnWave evWave = RespawnWaves.Get(ev.Wave);
+        if (evWave is null)
+        {
+            Logger.Warn($"RespawnWave Get returned null for SpawnableWaveBase with TargetFaction {ev.Wave.TargetFaction}. THIS WILL BREAK THINGS :)");
+            return;
+        }
+
+        if (_lockedWave != null && evWave.GetType() != _lockedWave.GetType()) // Equality will probably fumble. Need to get the type of the spawn wave.
+        {
+            Logger.Debug($"Tossing Respawn attempt for {evWave.GetType()} because it is not the wave that attempted to Respawn first.", RTOPlugin.Instance.Config.EnableDebugLogging);
+            ev.IsAllowed = false;
+            evWave.TimeLeft = 0; // Reset the timer.
+            return;
+        }
+        
+        // Now it's either the locked wave, or it's not locked. Check regardless if allowed.
 
         int lobbyCount = Player.List.Count(p => p.Role == RoleTypeId.Spectator);
         int requiredUsers = RTOPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100;
         
         if (lobbyCount >= requiredUsers)
         {
-            Logger.Debug($"Permitting Respawn attempt because {lobbyCount} >= {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
+            Logger.Debug($"Permitting Respawn attempt because {lobbyCount} >= {requiredUsers}. Spawning {evWave.GetType()}", RTOPlugin.Instance.Config.EnableDebugLogging);
+            _lockedWave = null;
             return;
         }
         
-        // Steps for if it's not permitted:
-        // Pause all others
-        // Set self to low timer
-        // Wait out low timer until spawns.
-        // Reset pauses to 0 if permitted.
-        
-        // Todo: pause timers whilst selecting, force only this team to spawn because it was selected first.
-        // Accept that tokens for further waves will be able to be influenced in the mean time.
-        // See if any mini waves can still spawn when this is prevented. -> unless you pause their timers.
-        // Once it's successfully spawned a wave, unpause the timers.
+        // If it's not in bounds, discard and set as locked. Then, set its timer to 15s remaining.
         ev.IsAllowed = false;  // Deny selection.
+        evWave.TimeLeft = evWave.TimePassed - 15;
+        _lockedWave = evWave;
         Logger.Debug(
-            $"Tossing Respawn attempt because {lobbyCount} < {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
-        
-        RespawnWave evWave = RespawnWaves.Get(ev.Wave);
-        if (evWave is null) return;
-        
-        Logger.Debug("Resetting all other team timers.", RTOPlugin.Instance.Config.EnableDebugLogging);
-        foreach (SpawnableWaveBase spawnableWaveBase in WaveManager.Waves)
-        {
-            RespawnWave wave = RespawnWaves.Get(spawnableWaveBase);
-            if (wave is null)
-            {
-                Logger.Debug($"\tRespawnWave {spawnableWaveBase.TargetFaction} | {spawnableWaveBase.GetType()} is not a RespawnWave.");
-                continue;
-            }
-            wave.TimeLeft += wave.TimePassed; // reset timer to default.
-        }
-        evWave.TimeLeft = 15;  // Will try again in 30 seconds.
-        evWave.PausedTime = 0;
+            $"Tossing Respawn attempt because {lobbyCount} < {requiredUsers}. Not spawning {evWave.GetType()}", RTOPlugin.Instance.Config.EnableDebugLogging);
     }
 }
