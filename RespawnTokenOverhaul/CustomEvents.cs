@@ -10,6 +10,7 @@ using Respawning.Waves;
 using Respawning.Waves.Generic;
 using Logger = LabApi.Features.Console.Logger;
 
+
 namespace RespawnTokenOverhaul;
 
 public class CustomEvents : CustomEventsHandler
@@ -132,8 +133,7 @@ public class CustomEvents : CustomEventsHandler
         Logger.Debug(
             $"Tossing Respawn attempt because {ev.SpawningPlayers.Count()} < {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
     }
-
-    private bool _spawnsLocked;
+    
     public override void OnServerWaveTeamSelecting(WaveTeamSelectingEventArgs ev)
     {
         if (RTOPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
@@ -141,19 +141,9 @@ public class CustomEvents : CustomEventsHandler
         int lobbyCount = Player.List.Count(p => p.Role == RoleTypeId.Spectator);
         int requiredUsers = RTOPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100;
         
-        if (lobbyCount < requiredUsers)
+        if (lobbyCount >= requiredUsers)
         {
             Logger.Debug($"Permitting Respawn attempt because {lobbyCount} >= {requiredUsers}.", RTOPlugin.Instance.Config.EnableDebugLogging);
-            if (!_spawnsLocked) return;
-            
-            Logger.Debug("Unpausing timers. WARNING: MAY OVERRIDE PAUSES FROM OTHER PLUGINS. If this causes issues, contact the Developer.", RTOPlugin.Instance.Config.EnableDebugLogging);
-            foreach (RespawnWave wave in WaveManager.Waves.Select(spawnableWaveBase => RespawnWaves.Get(spawnableWaveBase)).Where(wave => wave is not null))
-            {
-                wave.PausedTime = 0;
-            }
-
-            _spawnsLocked = false;
-            
             return;
         }
         
@@ -174,7 +164,7 @@ public class CustomEvents : CustomEventsHandler
         RespawnWave evWave = RespawnWaves.Get(ev.Wave);
         if (evWave is null) return;
         
-        Logger.Debug("Pausing all other team timers.", RTOPlugin.Instance.Config.EnableDebugLogging);
+        Logger.Debug("Resetting all other team timers.", RTOPlugin.Instance.Config.EnableDebugLogging);
         foreach (SpawnableWaveBase spawnableWaveBase in WaveManager.Waves)
         {
             RespawnWave wave = RespawnWaves.Get(spawnableWaveBase);
@@ -183,9 +173,9 @@ public class CustomEvents : CustomEventsHandler
                 Logger.Debug($"\tRespawnWave {spawnableWaveBase.TargetFaction} | {spawnableWaveBase.GetType()} is not a RespawnWave.");
                 continue;
             }
-            wave.PausedTime = 35; // Should be enough time, no?
+            wave.TimeLeft += wave.TimePassed; // reset timer to default.
         }
-        evWave.PausedTime = 30;  // Will try again in 30 seconds.
-        _spawnsLocked = true;
+        evWave.TimeLeft = 15;  // Will try again in 30 seconds.
+        evWave.PausedTime = 0;
     }
 }
