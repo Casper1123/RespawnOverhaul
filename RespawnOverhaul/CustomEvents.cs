@@ -30,7 +30,7 @@ public class CustomEvents : CustomEventsHandler
             
             // Overriding spawn wave max size to 100% of the spectators. Leave no-one behind.
             // Done regardless of the set tokens in the config.
-            wave.MaxWaveSize = Player.List.Count > Server.MaxPlayers ? Player.List.Count : Server.MaxPlayers;
+            wave.MaxWaveSize = Player.ReadyList.Count() > Server.MaxPlayers ? Player.ReadyList.Count() : Server.MaxPlayers;
 
             int factionTokens = CustomConfig.GetFactionDefaultRespawnTokens(wave.Faction);
             if (factionTokens < 0) continue;
@@ -52,7 +52,7 @@ public class CustomEvents : CustomEventsHandler
         {
             // Overriding spawn wave max size to 100% of the spectators. Leave no-one behind.
             // Done regardless of the set tokens in the config.
-            wave.MaxWaveSize = Player.List.Count > Server.MaxPlayers ? Player.List.Count : Server.MaxPlayers;
+            wave.MaxWaveSize = Player.ReadyList.Count() > Server.MaxPlayers ? Player.ReadyList.Count() : Server.MaxPlayers;
         }
     }
 
@@ -123,7 +123,7 @@ public class CustomEvents : CustomEventsHandler
         
         if (ROPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
 
-        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100;
+        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.ReadyList.Count() / 100;
         
         if (ev.SpawningPlayers.Count() >= requiredUsers)
         {
@@ -159,8 +159,8 @@ public class CustomEvents : CustomEventsHandler
         
         // Now it's either the locked wave, or it's not locked. Check regardless if allowed.
 
-        int lobbyCount = Player.List.Count(p => p.Role == RoleTypeId.Spectator);
-        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.List.Count / 100;
+        int lobbyCount = Player.ReadyList.Count(p => p.Role == RoleTypeId.Spectator);
+        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.ReadyList.Count() / 100;
         
         if (lobbyCount >= requiredUsers)
         {
