@@ -25,7 +25,7 @@ public class ROPlugin : Plugin<CustomConfig>
     public override string Author { get; } = "Casper1123";
 
     // The current version of the plugin
-    public override Version Version { get; } = new(1, 0, 0);
+    public override Version Version { get; } = new(1, 0, 1);
 
     // Config file path
     public override string ConfigFileName { get; set; } = "config.yml";
