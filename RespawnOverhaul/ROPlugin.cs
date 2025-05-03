@@ -15,25 +15,13 @@ namespace RespawnOverhaul;
 // ReSharper disable once InconsistentNaming
 public class ROPlugin : Plugin<CustomConfig>
 {
-    // The name of the plugin
     public override string Name { get; } = "RespawnOverhaul";
-
-    // The description of the plugin
     public override string Description { get; } = "Configurably changes team respawn behaviour.";
-
-    // The author of the plugin
     public override string Author { get; } = "Casper1123";
-
-    // The current version of the plugin
     public override Version Version { get; } = new(1, 0, 1);
-
-    // Config file path
     public override string ConfigFileName { get; set; } = "config.yml";
-
-    // The required version of LabAPI (usually the version the plugin was built with)
     public override Version RequiredApiVersion { get; } = new(LabApiProperties.CompiledVersion);
-
-
+    
     public new CustomConfig Config => base.Config!;
     private CustomEvents Events { get; } = new();
     public static ROPlugin Instance { get; private set; }
