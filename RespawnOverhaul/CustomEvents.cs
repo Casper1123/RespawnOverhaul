@@ -117,24 +117,14 @@ public class CustomEvents : CustomEventsHandler
         // SITE 0 2 ENTRANCE SEAL ACTIVATED ALL TEAM BACKUP RESTRICTED
     }
 
-    public void old_OnServerWaveRespawning(WaveRespawningEventArgs ev)  // Here to keep the code around for now, used to be in the spot of OnServerWaveTeamSelecting.
+    public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)
     {
-        if (ev.Wave is MiniRespawnWave) return;
-        
-        if (ROPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
-
-        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.ReadyList.Count() / 100;
-        
-        if (ev.SpawningPlayers.Count() >= requiredUsers)
+        if (ev.Wave is MiniRespawnWave && ROPlugin.Instance.Config.DisableMiniWave)
         {
-            Logger.Debug($"Permitting Respawn attempt because {ev.SpawningPlayers.Count()} >= {requiredUsers}.", ROPlugin.Instance.Config.EnableDebugLogging);
-            return;
+            ev.IsAllowed = false;
+            ev.Wave.TimeLeft = 0;
+            Logger.Debug($"Prevented Mini-wave {ev.Wave.GetType()} from spawning.", ROPlugin.Instance.Config.EnableDebugLogging);
         }
-        
-        ev.IsAllowed = false;
-        ev.Wave.RespawnTokens++;  // Give the token back.
-        Logger.Debug(
-            $"Tossing Respawn attempt because {ev.SpawningPlayers.Count()} < {requiredUsers}.", ROPlugin.Instance.Config.EnableDebugLogging);
     }
 
     [CanBeNull] private RespawnWave _lockedWave;
@@ -142,8 +132,13 @@ public class CustomEvents : CustomEventsHandler
     {
         if (ROPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
         
-        // Todo: make max % of non-scp players, scps should not be included to stop zombies from blocking spawning.
         RespawnWave evWave = RespawnWaves.Get(ev.Wave);
+        if (evWave is MiniRespawnWave && ROPlugin.Instance.Config.DisableMiniWave)
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+        
         if (evWave is null)
         {
             Logger.Warn($"RespawnWave Get returned null for SpawnableWaveBase with TargetFaction {ev.Wave.TargetFaction}. THIS WILL BREAK THINGS :)");
@@ -176,5 +171,7 @@ public class CustomEvents : CustomEventsHandler
         _lockedWave = evWave;
         Logger.Debug(
             $"Tossing Respawn attempt because {lobbyCount} < {requiredUsers}. Not spawning {evWave.GetType()}", ROPlugin.Instance.Config.EnableDebugLogging);
+        // Todo: when mini wave spawns, does that reset the main wave timer? Might want to figure out how to stop this many mini-waves from spawning.
+        // Cannot assume they are always disabled.
     }
 }

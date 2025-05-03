@@ -29,6 +29,8 @@ public class CustomConfig
     // Todo: Display the next milestone as a Hint on the screen.
     [Description("The percentage of the server population that must be included in the spawn.\n# Automatically sets max wave size to all spectators.\n# range 0.0 - 1.0, but 1.0 will prevent spawns.\n# Can be -1 to disable this functionality.")]
     public int MinimumWaveSizePercentage { get; set; } = 60;
+    [Description("Disables Mini-waves. If not disabled will spawn a LOT of non-main waves.")]
+    public bool DisableMiniWave { get; set; } = true;
     [Description("Prints debug information to the server console.")]
     public bool EnableDebugLogging { get; set; } = false;
     #endregion

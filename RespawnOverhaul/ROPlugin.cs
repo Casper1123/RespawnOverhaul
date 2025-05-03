@@ -18,7 +18,7 @@ public class ROPlugin : Plugin<CustomConfig>
     public override string Name { get; } = "RespawnOverhaul";
     public override string Description { get; } = "Configurably changes team respawn behaviour.";
     public override string Author { get; } = "Casper1123";
-    public override Version Version { get; } = new(1, 0, 1);
+    public override Version Version { get; } = new(1, 2, 0);
     public override string ConfigFileName { get; set; } = "config.yml";
     public override Version RequiredApiVersion { get; } = new(LabApiProperties.CompiledVersion);
     
