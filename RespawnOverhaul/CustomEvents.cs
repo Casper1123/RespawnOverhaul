@@ -142,6 +142,7 @@ public class CustomEvents : CustomEventsHandler
     {
         if (ROPlugin.Instance.Config.MinimumWaveSizePercentage == -1) return; // Return if disabled.
         
+        // Todo: make max % of non-scp players, scps should not be included to stop zombies from blocking spawning.
         RespawnWave evWave = RespawnWaves.Get(ev.Wave);
         if (evWave is null)
         {
@@ -151,7 +152,7 @@ public class CustomEvents : CustomEventsHandler
 
         if (_lockedWave != null && evWave.GetType() != _lockedWave.GetType()) // Equality will probably fumble. Need to get the type of the spawn wave.
         {
-            Logger.Debug($"Tossing Respawn attempt for {evWave.GetType()} because it is not the wave that attempted to Respawn first.", ROPlugin.Instance.Config.EnableDebugLogging);
+            Logger.Debug($"Tossing Respawn attempt for {evWave.GetType()} because it is not the wave that attempted to Respawn first ({_lockedWave.GetType()}.", ROPlugin.Instance.Config.EnableDebugLogging);
             ev.IsAllowed = false;
             evWave.TimeLeft = 0; // Reset the timer.
             return;
