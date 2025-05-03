@@ -16,7 +16,7 @@ namespace RespawnOverhaul;
 public class ROPlugin : Plugin<CustomConfig>
 {
     // The name of the plugin
-    public override string Name { get; } = "RespawnTokenOverhaul";
+    public override string Name { get; } = "RespawnOverhaul";
 
     // The description of the plugin
     public override string Description { get; } = "Configurably changes team respawn behaviour.";
