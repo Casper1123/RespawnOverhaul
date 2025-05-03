@@ -161,7 +161,7 @@ public class CustomEvents : CustomEventsHandler
         // Now it's either the locked wave, or it's not locked. Check regardless if allowed.
 
         int lobbyCount = Player.ReadyList.Count(p => p.Role == RoleTypeId.Spectator);
-        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.ReadyList.Count() / 100;
+        int requiredUsers = ROPlugin.Instance.Config.MinimumWaveSizePercentage * Player.ReadyList.Count(p => p.Team != Team.Flamingos || p.Team != Team.SCPs) / 100; // Non SCP/Mingo players
         
         if (lobbyCount >= requiredUsers)
         {
