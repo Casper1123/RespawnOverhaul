@@ -15,8 +15,6 @@ namespace RespawnOverhaul;
 // ReSharper disable once InconsistentNaming
 public class ROPlugin : Plugin<CustomConfig>
 {
-    // todo: protect certain things of the plugin.
-
     // The name of the plugin
     public override string Name { get; } = "RespawnTokenOverhaul";
 
