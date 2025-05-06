@@ -85,4 +85,10 @@ public class ROPlugin : Plugin<CustomConfig>
             where milestone >= 0
             select new RespawnTokensManager.Milestone(milestone));
     }
+    // What todo with the displaying things:
+    // When a player dies, display a hint on their screen, which does not expire. Should contain tokens required for next milestone, as well as the next Milestone token goal.
+    // When a player's role changes from Spectator to something else, remove it.
+    // When a player's role changes to Spectator, set it.
+    // When the ticket goal is achieved, update the Hint for all Spectators.
+    // Position: Below each team's ticket bar, additional Milestones
 }
